@@ -98,7 +98,7 @@ app.get("/quiz", (req, res) => {
         }
     }
 
-    if (query.username && correctAnswers > leaderboard[query.username]) {
+    if (query.username && (!leaderboard[query.username] || correctAnswers > leaderboard[query.username])) {
         leaderboard[query.username] = correctAnswers;
     }
 
