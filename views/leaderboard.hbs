@@ -1,0 +1,26 @@
+<div>
+    <table class="table table-striped table-bordered text-center">
+        <thead class="thead-dark">
+        <tr class="row">
+            <th class="col">
+                Имя пользователя
+            </th>
+            <th class="col">
+                Очки
+            </th>
+        </tr>
+        </thead>
+
+        {{#each leaderboard}}
+            <tr class="row">
+                <td class="col">
+                    {{username}}
+                </td>
+                <td class="col">
+                    {{score}}
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+    <a href="/quiz">Начать сначала</a>
+</div>

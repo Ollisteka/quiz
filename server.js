@@ -7,6 +7,8 @@ const port = 8888;
 
 const rootDir = process.cwd();
 
+const leaderboard = {};
+
 app.set('view engine', 'html');
 
 exports.index = function(req, res){
@@ -63,6 +65,19 @@ const questions = [
     }
 ];
 
+app.get('/leaderboard', (req, res) => {
+    let sortedLeaderboard = [];
+    for (const user in leaderboard) {
+        sortedLeaderboard.push({username: user, score: leaderboard[user]})
+    }
+    sortedLeaderboard = sortedLeaderboard.sort((a, b) => b.score - a.score);
+    res.render("leaderboard", {
+        layout: "index",
+        leaderboard: sortedLeaderboard
+    });
+});
+
+// todo разбить на POST
 app.get("/quiz", (req, res) => {
     const args = Array.from(Object.keys(req.query));
 
@@ -78,10 +93,13 @@ app.get("/quiz", (req, res) => {
     let correctAnswers = 0;
     for (let i = 0; i < questions.length; i++) {
         const userAnswer = query[`question-${i}`];
-        console.log(`${i}  ${userAnswer}  ${questions[i].correctAnswer}`);
         if (parseInt(userAnswer) === questions[i].correctAnswer) {
             correctAnswers++;
         }
+    }
+
+    if (query.username && correctAnswers > leaderboard[query.username]) {
+        leaderboard[query.username] = correctAnswers;
     }
 
     res.render("result", {
