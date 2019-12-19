@@ -63,10 +63,30 @@ const questions = [
     }
 ];
 
-app.get("/card", (req, res) => {
-    res.render("card", {
+app.get("/quiz", (req, res) => {
+    const args = Array.from(Object.keys(req.query));
+
+    if (args.filter(x => x.match(/question-\d/)).length === 0) {
+        res.render("card", {
+            layout: "index",
+            questions
+        });
+        return;
+    }
+
+    const query = req.query;
+    let correctAnswers = 0;
+    for (let i = 0; i < questions.length; i++) {
+        const userAnswer = query[`question-${i}`];
+        console.log(`${i}  ${userAnswer}  ${questions[i].correctAnswer}`);
+        if (parseInt(userAnswer) === questions[i].correctAnswer) {
+            correctAnswers++;
+        }
+    }
+
+    res.render("result", {
         layout: "index",
-        questions
+        correctAnswers
     });
 });
 
